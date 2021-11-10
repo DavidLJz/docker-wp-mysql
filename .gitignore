@@ -1,4 +1,5 @@
 desktop.ini
 .DB_store
 *.sublime*
+.env
 /www/*
