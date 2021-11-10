@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mysql:
+    build:
+      context: ./mysql
+      args:
+        mysql_version: ${MYSQL_VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    command: --sql_mode=''
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${TIMEZONE}
+    ports:
+      - "3306:3306"
+    restart: on-failure 
+    
+  wp:
+    build: 
+      context: ./wp
+      args:
+        wp_version: ${WP_VERSION}
+    environment:
+      TZ: ${TIMEZONE}
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-wp
+    ports:
+      - "${WP_PORT}:80"
+    volumes:
+      - ./www:/var/www/html
+    links:
+      - mysql
+    restart: on-failure 
