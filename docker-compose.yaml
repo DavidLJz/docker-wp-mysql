@@ -38,3 +38,18 @@ services:
     links:
       - mysql
     restart: on-failure 
+  
+  phpmyadmin:
+    image: phpmyadmin:5.1.1
+    container_name: ${COMPOSE_PROJECT_NAME}-phpmyadmin
+    restart: on-failure
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=${MYSQL_USER}
+      - PMA_PASSWORD=${MYSQL_PASSWORD}
+      - PMA_PMADB=${MYSQL_DATABASE}
+      - PMA_REQUIRE_SSL=false
+    links:
+      - mysql
